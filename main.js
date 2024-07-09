@@ -1,4 +1,8 @@
 require("dotenv").config();
+process.on('uncaughtException', (error) => {
+  console.error('Uncaught Exception:', error);
+  // process.exit(1); // Exit code 1 indicates an unhandled fatal exception
+});
 //#region express configures
 var express = require("express");
 var path = require("path");
@@ -48,12 +52,15 @@ const corsConfig = {
 
 app.use(cors(corsConfig));
 app.options("*", cors(corsConfig));
-
-var port = process.env.PORT || "80"; //local=3000 remote=80
+// var port = process.env.PORT; //local=3000 remote=80
+// var port = process.env.PORT || "80"; //local=3000 remote=80
+// var port = "3000"; //local=3000 remote=80
+var port = "3000";
 //#endregion
 const user = require("./routes/user");
 const recipes = require("./routes/recipes");
 const auth = require("./routes/auth");
+const { env } = require("process");
 
 
 //#region cookie middleware

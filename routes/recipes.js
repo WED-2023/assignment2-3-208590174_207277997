@@ -16,9 +16,15 @@ router.get("/search", async (req, res, next) => {
     const number = req.query.number || 5;
     const results = await recipes_utils.searchRecipe(recipeName, cuisine, diet, intolerance, number);
     res.send(results);
+    console.log(recipeName)
+    console.log(cuisine)
+    console.log(diet)
+    console.log(intolerance)
+    console.log(number)    
   } catch (error) {
     next(error);
   }
+});
 
 /**
  * This path returns a full details of a recipe by its id

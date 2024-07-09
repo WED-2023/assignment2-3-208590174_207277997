@@ -133,6 +133,209 @@ paths:
                 $ref: '#/components/schemas/RecipePreview'
         "404":
           description: recipeId is not exists
+  /recipes/fullview/{recipe_id}:
+    get:
+      tags:
+        - Recipes
+      summary: "Get full view of a recipe by ID"
+      description: "Returns the full view of a recipe when provided with the recipe ID."
+      operationId: "GetFullViewRecipeByID"
+      parameters:
+        - $ref: "#/components/parameters/recipeID"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecipeFullView"
+              examples:
+                example1:
+                  value:
+                    id: 716429
+                    image: "https://img.spoonacular.com/recipes/716429-556x370.jpg"
+                    title: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs"
+                    readyInMinutes: 45
+                    aggregateLikes: 209
+                    vegetarian: false
+                    vegan: false
+                    glutenFree: false
+                    summary: "You can never have too many main course recipes..."
+                    analyzedInstructions: []
+                    instructions: ""
+                    extendedIngredients:
+                      - id: 1001
+                        aisle: "Milk, Eggs, Other Dairy"
+                        image: "butter-sliced.jpg"
+                        consistency: "SOLID"
+                        name: "butter"
+                        nameClean: "butter"
+                        original: "1 tbsp butter"
+                        originalName: "butter"
+                        amount: 1.0
+                        unit: "tbsp"
+                        meta: []
+                        measures:
+                          us:
+                            amount: 1.0
+                            unitShort: "Tbsp"
+                            unitLong: "Tbsp"
+                          metric:
+                            amount: 1.0
+                            unitShort: "Tbsp"
+                            unitLong: "Tbsp"
+        404:
+          description: "Recipe Not Found"
+  /recipes/search/{recipe_name}:
+    get:
+      tags:
+        - Recipes
+      summary: "Search recipes by name"
+      description: "Search for recipes by name with optional sorting and filtering."
+      operationId: "SearchRecipeByName"
+      parameters:
+        - $ref: "#/components/searchParameters"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecipePreview"
+              examples:
+                example1:
+                  value:
+                    "716429":
+                      id: 716429
+                      image: "https://img.spoonacular.com/recipes/716429-556x370.jpg"
+                      title: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs"
+                      readyInMinutes: 45
+                      aggregateLikes: 209
+                      vegetarian: false
+                      vegan: false
+                      glutenFree: false
+                      summary: "You can never have too many main course recipes..."
+        404:
+          description: "Recipes Not Found"
+  /users/recipes/add:
+    post:
+      tags:
+        - Users
+      summary: "Add user recipe"
+      description: "Add a new recipe created by the user."
+      operationId: "AddUserRecipe"
+      parameters:
+        - $ref: "#/components/parameters/username"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RecipeFullView"
+            examples:
+              example1:
+                value:
+                  id: 716429
+                  image: "https://img.spoonacular.com/recipes/716429-556x370.jpg"
+                  title: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs"
+                  readyInMinutes: 45
+                  aggregateLikes: 209
+                  vegetarian: false
+                  vegan: false
+                  glutenFree: false
+                  summary: "You can never have too many main course recipes..."
+                  analyzedInstructions: []
+                  instructions: ""
+                  extendedIngredients:
+                    - id: 1001
+                      aisle: "Milk, Eggs, Other Dairy"
+                      image: "butter-sliced.jpg"
+                      consistency: "SOLID"
+                      name: "butter"
+                      nameClean: "butter"
+                      original: "1 tbsp butter"
+                      originalName: "butter"
+                      amount: 1.0
+                      unit: "tbsp"
+                      meta: []
+                      measures:
+                        us:
+                          amount: 1.0
+                          unitShort: "Tbsp"
+                          unitLong: "Tbsp"
+                        metric:
+                          amount: 1.0
+                          unitShort: "Tbsp"
+                          unitLong: "Tbsp"
+      responses:
+        201:
+          description: "Created"
+        400:
+          description: "Bad request - verify information"
+  /users/recipes/myRecipes:
+    get:
+      tags:
+        - Users
+      summary: "Get user recipes preview"
+      description: "Get a preview of recipes created by the user."
+      operationId: "GetUserRecipesPreview"
+      parameters:
+        - $ref: "#/components/parameters/username"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RecipePreview"
+              examples:
+                example1:
+                  value:
+                    "716429":
+                      id: 716429
+                      image: "https://img.spoonacular.com/recipes/716429-556x370.jpg"
+                      title: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs"
+                      readyInMinutes: 45
+                      aggregateLikes: 209
+                      vegetarian: false
+                      vegan: false
+                      glutenFree: false
+                      summary: "You can never have too many main course recipes..."
+        404:
+          description: "No recipes created by the user were found"
+  /users/recipes/myFamilyRecipes:
+    get:
+      tags:
+        - Users
+      summary: "Get user's family recipes preview"
+      description: "Get a preview of family recipes created by the user."
+      operationId: "GetUsersFamilyRecipesPreview"
+      parameters:
+        - $ref: "#/components/parameters/username"
+      responses:
+        200:
+          description: "Successful operation"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/FamilyRecipePreview"
+              examples:
+                example1:
+                  value:
+                    "716429":
+                      id: 716429
+                      image: "https://img.spoonacular.com/recipes/716429-556x370.jpg"
+                      title: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs"
+                      readyInMinutes: 45
+                      aggregateLikes: 209
+                      vegetarian: false
+                      vegan: false
+                      glutenFree: false
+                      summary: "You can never have too many main course recipes..."
+                      recipeAuthor: "John Doe"
+                      traditionOfCookingTheRecipe: "Italian"
+        404:
+          description: "No family recipes were found"
 components:
   schemas:
     User:
@@ -227,4 +430,120 @@ components:
           type: boolean
           description: indication if the recipe is gluten free
           example: false
+        recipeID:
+      name: "recipeID"
+      in: "query"
+      description: "ID of the recipe"
+      required: true
+      schema:
+        type: "integer"
+    username:
+      name: "username"
+      in: "query"
+      description: "name of the user"
+      required: true
+      schema:
+        type: "string"
+    searchParameters:
+      name: "searchParameters"
+      in: "query"
+      description: "Search parameters including recipe name, sorting criteria, number of results, and filtering categories"
+      required: true
+      schema:
+        $ref: "#/components/schemas/Search"
+    Search:
+      type: "object"
+      properties:
+        recipeName:
+          type: "string"
+          description: "Name of the recipe to search for"
+        sortingCriteria:
+          type: "string"
+          description: "Sorting criteria for the search results (either 'cooking time' or 'popularity')"
+          enum:
+            - "cooking time"
+            - "popularity"
+        numberOfResults:
+          type: "integer"
+          description: "Number of results to return, default is 5"
+          default: 5
+    RecipeFullView:
+      type: "object"
+      properties:
+        id:
+          type: "integer"
+        image:
+          type: "string"
+        title:
+          type: "string"
+        readyInMinutes:
+          type: "integer"
+        aggregateLikes:
+          type: "integer"
+        vegetarian:
+          type: "boolean"
+        vegan:
+          type: "boolean"
+        glutenFree:
+          type: "boolean"
+        summary:
+          type: "string"
+        analyzedInstructions:
+          type: "array"
+          items:
+            type: "string"
+        instructions:
+          type: "string"
+        extendedIngredients:
+          type: "array"
+          items:
+            type: "object"
+            properties:
+              id:
+                type: "integer"
+              aisle:
+                type: "string"
+              image:
+                type: "string"
+              consistency:
+                type: "string"
+              name:
+                type: "string"
+              nameClean:
+                type: "string"
+              original:
+                type: "string"
+              originalName:
+                type: "string"
+              amount:
+                type: "number"
+              unit:
+                type: "string"
+              meta:
+                type: "array"
+                items:
+                  type: "string"
+              measures:
+                type: "object"
+                properties:
+                  us:
+                    type: "object"
+                    properties:
+                      amount:
+                        type: "number"
+                      unitShort:
+                        type: "string"
+                      unitLong:
+                        type: "string"
+                  metric:
+                    type: "object"
+                    properties:
+                      amount:
+                        type: "number"
+                      unitShort:
+                        type: "string"
+                      unitLong:
+                        type: "string"
+    
+        
   

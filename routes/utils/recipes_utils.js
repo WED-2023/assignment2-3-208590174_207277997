@@ -13,7 +13,8 @@ async function getRecipeInformation(recipe_id) {
     return await axios.get(`${api_domain}/${recipe_id}/information`, {
         params: {
             includeNutrition: false,
-            apiKey: process.env.spooncular_apiKey
+            // apiKey: process.env.spooncular_apiKey
+            apiKey:"8745638cfb384041a0b26c0578a9a6d2"
         }
     });
 }
@@ -37,7 +38,7 @@ async function getRecipeDetails(recipe_id) {
     }
 }
 
-async function searchRecipe(recipeName, cuisine, diet, intolerance, number, username) {
+async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
     const response = await axios.get(`${api_domain}/complexSearch`, {
         params: {
             query: recipeName,
@@ -48,13 +49,36 @@ async function searchRecipe(recipeName, cuisine, diet, intolerance, number, user
             apiKey: process.env.spooncular_apiKey
         }
     });
+    
+    // Use Promise.all to fetch details for each recipe ID
+    const recipeDetails = await Promise.all(response.data.results.map(element => getRecipeDetails(element.id)));
+    return recipeDetails;
 
-    return getRecipesPreview(response.data.results.map((element) => element.id), username);
+    //return getRecipeDetails(response.data.results.map((element) => element.recipe_id));
 }
 
 
+// async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
+//     const response = await axios.get('${api_domain}/complexSearch', {
+//         params: {
+//             query: recipeName,
+//             cuisine: cuisine,
+//             diet: diet,
+//             intolerances: intolerance,
+//             number: number,
+//             apiKey: "8745638cfb384041a0b26c0578a9a6d2"
+//         }
+//     });
 
-exports.getRecipeDetails = getRecipeDetails;
+//     // Await all the fetched details together
+//     const recipesDetails = await Promise.all(response.data.results.map(recipe => 
+//         getRecipeDetails(recipe.id)));
+//     return recipesDetails;
+// }
 
-
+module.exports={
+    getRecipeDetails,
+    searchRecipe,
+    };
+    
 
