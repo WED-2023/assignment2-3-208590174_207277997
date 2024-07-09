@@ -4,6 +4,35 @@ const DButils = require("./utils/DButils");
 const user_utils = require("./utils/user_utils");
 const recipe_utils = require("./utils/recipes_utils");
 
+const MySql = require("../routes/utils/MySql");
+router.post("/addRecipe", async (req, res, next) => {
+  try {
+    // parameters exists
+    // valid parameters
+    // username exists
+    let recipe_info = {
+      username: req.session.username,
+      title: req.body.title,
+      readyInMinutes: req.body.readyInMinutes,
+      image: req.body.image,
+      aggregateLikes: req.body.aggregateLikes,
+      vegan: req.body.vegan,
+      vegetarian: req.body.vegetarian,
+      glutenFree:req.body.glutenFree
+    }
+    // add the new recipe
+    await user_utils.createUserRecipe(recipe_info);
+    res.status(201).send({ message: "recipe created successfully", success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+
+
+
+
 /**
  * Authenticate all incoming requests by middleware
  */
