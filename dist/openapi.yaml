@@ -12,7 +12,7 @@ servers:
 tags:
 - name: Auth
   description: All authentication related routes
-- name: Users
+- name: User
   description: All the user's personal app info
 - name: Recipes
   description: All reciepes general info
@@ -68,10 +68,10 @@ paths:
       responses:
         "200":
           description: "the user has ben successfully logged out"
-  /users/favorites:
+  /user/favorites:
     get:
       tags:
-      - Users
+      - User
       summary: Return the favorite recipes that were saved by user
       description: Get an array of recipes that were saved by a specific user
       responses:
@@ -89,7 +89,7 @@ paths:
       - cookieAuth: []
     post:
       tags:
-      - Users
+      - User
       summary: save recipe in the favorites list of a user
       description: save recipe in the favorites list of a user
       requestBody:
@@ -217,10 +217,10 @@ paths:
                       summary: "You can never have too many main course recipes..."
         404:
           description: "Recipes Not Found"
-  /users/recipes/add:
+  /user/createRecipe:
     post:
       tags:
-        - Users
+        - User
       summary: "Add user recipe"
       description: "Add a new recipe created by the user."
       operationId: "AddUserRecipe"
@@ -272,10 +272,10 @@ paths:
           description: "Created"
         400:
           description: "Bad request - verify information"
-  /users/recipes/myRecipes:
+  /user/myRecipes:
     get:
       tags:
-        - Users
+        - User
       summary: "Get user recipes preview"
       description: "Get a preview of recipes created by the user."
       operationId: "GetUserRecipesPreview"
@@ -303,10 +303,10 @@ paths:
                       summary: "You can never have too many main course recipes..."
         404:
           description: "No recipes created by the user were found"
-  /users/recipes/myFamilyRecipes:
+  /user/myFamilyRecipes:
     get:
       tags:
-        - Users
+        - User
       summary: "Get user's family recipes preview"
       description: "Get a preview of family recipes created by the user."
       operationId: "GetUsersFamilyRecipesPreview"
