@@ -46,7 +46,7 @@ async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
             diet: diet,
             intolerances: intolerance,
             number: number,
-            apiKey: process.env.spooncular_apiKey
+            apiKey: "8745638cfb384041a0b26c0578a9a6d2"
         }
     });
     

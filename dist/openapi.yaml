@@ -457,13 +457,16 @@ components:
         recipeName:
           type: "string"
           description: "Name of the recipe to search for"
-        sortingCriteria:
+        cuisine:
           type: "string"
-          description: "Sorting criteria for the search results (either 'cooking time' or 'popularity')"
-          enum:
-            - "cooking time"
-            - "popularity"
-        numberOfResults:
+          description: "origin of the recipe"
+        diet:
+          type: "string"
+          description: "regular\vegan\vegeterian"
+        intolerances:
+          type: "string"
+          description: "gluten free"
+        number:
           type: "integer"
           description: "Number of results to return, default is 5"
           default: 5
