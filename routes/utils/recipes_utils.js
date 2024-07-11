@@ -10,13 +10,23 @@ const api_domain = "https://api.spoonacular.com/recipes";
 
 
 async function getRecipeInformation(recipe_id) {
-    return await axios.get(`${api_domain}/${recipe_id}/information`, {
+    try {
+      // Trim any whitespace or newline characters from the recipe_id
+      const cleanedRecipeId = recipe_id.trim();
+      const response = await axios.get(`${api_domain}/${cleanedRecipeId}/information`, {
         params: {
-            includeNutrition: false,
-            // apiKey: process.env.spooncular_apiKey
-            apiKey:"8745638cfb384041a0b26c0578a9a6d2"
+          includeNutrition: false,
+          apiKey:"dfae693cae89440ab9807ae88961373f"
         }
-    });
+      });
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        throw { status: 404, message: "No results were found" };
+      } else {
+        throw error;
+      }
+    }
 }
 
 
@@ -38,6 +48,8 @@ async function getRecipeDetails(recipe_id) {
     }
 }
 
+
+
 async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
     const response = await axios.get(`${api_domain}/complexSearch`, {
         params: {
@@ -46,7 +58,7 @@ async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
             diet: diet,
             intolerances: intolerance,
             number: number,
-            apiKey: process.env.spooncular_apiKey
+            apiKey: "dfae693cae89440ab9807ae88961373f"
         }
     });
     
@@ -58,27 +70,10 @@ async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
 }
 
 
-// async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
-//     const response = await axios.get('${api_domain}/complexSearch', {
-//         params: {
-//             query: recipeName,
-//             cuisine: cuisine,
-//             diet: diet,
-//             intolerances: intolerance,
-//             number: number,
-//             apiKey: "8745638cfb384041a0b26c0578a9a6d2"
-//         }
-//     });
-
-//     // Await all the fetched details together
-//     const recipesDetails = await Promise.all(response.data.results.map(recipe => 
-//         getRecipeDetails(recipe.id)));
-//     return recipesDetails;
-// }
-
 module.exports={
     getRecipeDetails,
     searchRecipe,
+    getRecipeInformation
     };
     
 
