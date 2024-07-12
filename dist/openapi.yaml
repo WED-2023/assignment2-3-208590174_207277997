@@ -98,9 +98,9 @@ paths:
             schema:
               type: object
               properties:
-                reciepeId:
+                recipeId:
                   type: string
-                  description: reciepe's id which the user saved
+                  description: recipe's id which the user saved
                   example: 716429
       responses:
         "200":
@@ -217,7 +217,8 @@ paths:
                       summary: "You can never have too many main course recipes..."
         404:
           description: "Recipes Not Found"
-  /users/recipes/add:
+  
+  /users/createRecipe:
     post:
       tags:
         - Users
@@ -231,48 +232,70 @@ paths:
         content:
           application/json:
             schema:
-              $ref: "#/components/schemas/RecipeFullView"
-            examples:
-              example1:
-                value:
-                  id: 716429
-                  image: "https://img.spoonacular.com/recipes/716429-556x370.jpg"
-                  title: "Pasta with Garlic, Scallions, Cauliflower & Breadcrumbs"
-                  readyInMinutes: 45
-                  aggregateLikes: 209
-                  vegetarian: false
-                  vegan: false
-                  glutenFree: false
-                  summary: "You can never have too many main course recipes..."
-                  analyzedInstructions: []
-                  instructions: ""
-                  extendedIngredients:
-                    - id: 1001
-                      aisle: "Milk, Eggs, Other Dairy"
-                      image: "butter-sliced.jpg"
-                      consistency: "SOLID"
-                      name: "butter"
-                      nameClean: "butter"
-                      original: "1 tbsp butter"
-                      originalName: "butter"
-                      amount: 1.0
-                      unit: "tbsp"
-                      meta: []
-                      measures:
-                        us:
-                          amount: 1.0
-                          unitShort: "Tbsp"
-                          unitLong: "Tbsp"
-                        metric:
-                          amount: 1.0
-                          unitShort: "Tbsp"
-                          unitLong: "Tbsp"
+              type: object
+              properties:
+                title:
+                  type: string
+                  example: "My New Recipe"
+                readyInMinutes:
+                  type: integer
+                  example: 30
+                image:
+                  type: string
+                  example: "http://example.com/my-recipe.jpg"
+                popularity:
+                  type: integer
+                  example: 10
+                vegan:
+                  type: boolean
+                  example: false
+                vegetarian:
+                  type: boolean
+                  example: true
+                glutenFree:
+                  type: boolean
+                  example: false
+                ingredients:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        example: "flour"
+                      amount:
+                        type: number
+                        example: 200
+                      unit:
+                        type: string
+                        example: "grams"
       responses:
         201:
           description: "Created"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Recipe created successfully"
+                  recipe_id:
+                    type: integer
+                    example: 12345
         400:
           description: "Bad request - verify information"
-  /users/recipes/myRecipes:
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Missing required fields"
+
+  
+  /users/myRecipes:
     get:
       tags:
         - Users
@@ -303,7 +326,7 @@ paths:
                       summary: "You can never have too many main course recipes..."
         404:
           description: "No recipes created by the user were found"
-  /users/recipes/myFamilyRecipes:
+  /users/myFamilyRecipes:
     get:
       tags:
         - Users

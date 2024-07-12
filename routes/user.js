@@ -4,6 +4,8 @@ const DButils = require("./utils/DButils");
 const user_utils = require("./utils/user_utils");
 const recipe_utils = require("./utils/recipes_utils");
 
+/** all paths begin with /users/   */
+
 /**
  * Authenticate all incoming requests by middleware
  */
@@ -60,18 +62,29 @@ router.get('/favorites', async (req,res,next) => {
 /**
  * This path allows a logged-in user to create a new recipe
  */
+<<<<<<< HEAD
 router.post('/createrecipe', async (req, res, next) => {
   try {
     const username = req.session.username;
     const { title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree, ingredients, summary, instruction } = req.body;
+=======
+router.post('/createRecipes', async (req, res, next) => {
+  try {
+    const username = req.session.username;
+    const { title, readyInMinutes, image,summary,instructions, popularity, vegan, vegetarian, glutenFree, ingredients } = req.body;
+>>>>>>> fa6a4a358a77f0840015ce61e5117f4a4128eb29
 
     // Validate input
-    if (!title || !readyInMinutes || !ingredients || ingredients.length === 0) {
+    if (!title || !readyInMinutes || summary.length === 0 || instructions.length === 0 || !ingredients) {
       return res.status(400).send({ message: "Missing required fields" });
     }
 
     // Create the recipe
+<<<<<<< HEAD
     const recipe_id = await user_utils.createRecipe(username, title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree, ingredients, summary, instruction);
+=======
+    const recipe_id = await user_utils.createRecipe(username, title, readyInMinutes, image, summary,instructions,popularity, vegan, vegetarian, glutenFree, ingredients,);
+>>>>>>> fa6a4a358a77f0840015ce61e5117f4a4128eb29
 
     res.status(201).send({ message: "Recipe created successfully", recipe_id: recipe_id });
   } catch (error) {
@@ -88,6 +101,21 @@ router.get('/myRecipes', async (req, res, next) => {
     const username = req.session.username;
     const recipes = await user_utils.getUserRecipes(username);
     res.status(200).send(recipes);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
+/**
+ * This path returns a full view of a user's recipe by its id
+ */
+router.get("/fullview/:recipeId", async (req, res, next) => {
+  try {
+    const username = req.session.username;
+    const usernameRecipeId = req.params.recipeId.trim(); 
+    const userRecipe = await user_utils.getUserRecipeInformation(username,usernameRecipeId);
+    res.status(200).send(userRecipe);
   } catch (error) {
     next(error);
   }
