@@ -53,4 +53,17 @@ router.get("/fullview/:recipeId", async (req, res, next) => {
 });
 
 
+/**
+ * This path returns 3 random recipes
+ */
+router.get("/random", async (req, res, next) => {
+  try {
+    const recipes = await recipes_utils.getRandomRecipes(3);
+    res.status(200).send(recipes);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
 module.exports = router;

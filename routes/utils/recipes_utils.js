@@ -2,7 +2,6 @@ const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
 
 
-
 /**
  * Get recipes list from spooncular response and extract the relevant recipe data for preview
  * @param {*} recipes_info 
@@ -30,7 +29,6 @@ async function getRecipeInformation(recipe_id) {
 }
 
 
-
 async function getRecipeDetails(recipe_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
     let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
@@ -47,7 +45,6 @@ async function getRecipeDetails(recipe_id) {
         
     }
 }
-
 
 
 async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
@@ -70,10 +67,31 @@ async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
 }
 
 
+/**
+ * Get random recipes from Spoonacular API
+ * @param {number} number - Number of random recipes to fetch
+ */
+async function getRandomRecipes(number = 3) {
+  try {
+    const response = await axios.get(`${api_domain}/random`, {
+      params: {
+        number: number,
+        apiKey: "dfae693cae89440ab9807ae88961373f"
+      }
+    });
+    return response.data.recipes;
+  } catch (error) {
+    console.error('Error fetching random recipes:', error);
+    throw error;
+  }
+}
+
+
 module.exports={
     getRecipeDetails,
     searchRecipe,
-    getRecipeInformation
+    getRecipeInformation,
+    getRandomRecipes
     };
     
 
