@@ -56,13 +56,14 @@ router.get('/favorites', async (req,res,next) => {
   }
 });
 
+
 /**
  * This path allows a logged-in user to create a new recipe
  */
-router.post('/recipes', async (req, res, next) => {
+router.post('/createrecipe', async (req, res, next) => {
   try {
     const username = req.session.username;
-    const { title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree, ingredients } = req.body;
+    const { title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree, ingredients, summary, instruction } = req.body;
 
     // Validate input
     if (!title || !readyInMinutes || !ingredients || ingredients.length === 0) {
@@ -70,7 +71,7 @@ router.post('/recipes', async (req, res, next) => {
     }
 
     // Create the recipe
-    const recipe_id = await user_utils.createRecipe(username, title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree, ingredients);
+    const recipe_id = await user_utils.createRecipe(username, title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree, ingredients, summary, instruction);
 
     res.status(201).send({ message: "Recipe created successfully", recipe_id: recipe_id });
   } catch (error) {

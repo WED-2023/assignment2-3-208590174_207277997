@@ -11,11 +11,11 @@ async function getFavoriteRecipes(username){
 
 
 // Function to create a new recipe
-async function createRecipe(username, title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree, ingredients) {
+async function createRecipe(username, title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree, ingredients, summary, instruction) {
   // Insert the recipe into User_Recipes table
   const result = await DButils.execQuery(`
-    INSERT INTO User_Recipes (username, title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree)
-    VALUES ('${username}', '${title}', ${readyInMinutes}, '${image}', ${popularity}, ${vegan}, ${vegetarian}, ${glutenFree})
+    INSERT INTO User_Recipes (username, title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree, summary, instruction)
+    VALUES ('${username}', '${title}', ${readyInMinutes}, '${image}', ${popularity}, ${vegan}, ${vegetarian}, ${glutenFree},'${summary}', '${instruction}' )
   `);
   const recipe_id = result.insertId;
 
@@ -45,8 +45,6 @@ async function getUserRecipes(username) {
   }
   
   
-
-
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
 exports.createRecipe = createRecipe;
