@@ -33,12 +33,18 @@ router.get("/:recipeId", async (req, res, next) => {
   }
 });
 
-router.po("/fullview/:recipeId", async (req, res, next) => {
+
+/**
+ * This path returns a full view of a recipe by its id
+ */
+router.get("/fullview/:recipeId", async (req, res, next) => {
   try {
-    const recipe = await recipes_utils.getRecipeInformation(req.params.recipeId);
-    res.send(recipe);
+    const recipeId = req.params.recipeId.trim(); 
+    const recipe = await recipes_utils.getRecipeInformation(recipeId);
+    res.status(200).send(recipe);
   } catch (error) {
     next(error);
   }
 });
+
 module.exports = router;

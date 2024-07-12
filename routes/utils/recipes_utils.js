@@ -10,13 +10,24 @@ const api_domain = "https://api.spoonacular.com/recipes";
 
 
 async function getRecipeInformation(recipe_id) {
-    return await axios.get(`${api_domain}/${recipe_id}/information`, {
+    try {
+      // Trim any whitespace or newline characters from the recipe_id
+      const cleanedRecipeId = recipe_id.trim();
+      const response = await axios.get(`${api_domain}/${cleanedRecipeId}/information`, {
         params: {
             includeNutrition: false,
             // apiKey: process.env.spooncular_apiKey
             apiKey:"3dcd1d731fbc4a55978c3e4e8e3044a4"
         }
-    });
+      });
+      return response.data;
+    } catch (error) {
+      if (error.response && error.response.status === 404) {
+        throw { status: 404, message: "No results were found" };
+      } else {
+        throw error;
+      }
+    }
 }
 
 
@@ -38,6 +49,8 @@ async function getRecipeDetails(recipe_id) {
     }
 }
 
+
+
 async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
     const response = await axios.get(`${api_domain}/complexSearch`, {
         params: {
@@ -46,14 +59,17 @@ async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
             diet: diet,
             intolerances: intolerance,
             number: number,
-            apiKey: "3dcd1d731fbc4a55978c3e4e8e3044a4"
+            apiKey: process.env.spooncular_apiKey
         }
     });
     
     // Use Promise.all to fetch details for each recipe ID
     const recipeDetails = await Promise.all(response.data.results.map(element => getRecipeDetails(element.id)));
     return recipeDetails;
+
+    //return getRecipeDetails(response.data.results.map((element) => element.recipe_id));
 }
+
 
 module.exports={
     getRecipeDetails,
