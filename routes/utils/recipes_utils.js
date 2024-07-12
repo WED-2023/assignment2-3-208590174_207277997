@@ -14,7 +14,7 @@ async function getRecipeInformation(recipe_id) {
         params: {
             includeNutrition: false,
             // apiKey: process.env.spooncular_apiKey
-            apiKey:"8745638cfb384041a0b26c0578a9a6d2"
+            apiKey:"3dcd1d731fbc4a55978c3e4e8e3044a4"
         }
     });
 }
@@ -46,39 +46,19 @@ async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
             diet: diet,
             intolerances: intolerance,
             number: number,
-            apiKey: process.env.spooncular_apiKey
+            apiKey: "3dcd1d731fbc4a55978c3e4e8e3044a4"
         }
     });
     
     // Use Promise.all to fetch details for each recipe ID
     const recipeDetails = await Promise.all(response.data.results.map(element => getRecipeDetails(element.id)));
     return recipeDetails;
-
-    //return getRecipeDetails(response.data.results.map((element) => element.recipe_id));
 }
-
-
-// async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
-//     const response = await axios.get('${api_domain}/complexSearch', {
-//         params: {
-//             query: recipeName,
-//             cuisine: cuisine,
-//             diet: diet,
-//             intolerances: intolerance,
-//             number: number,
-//             apiKey: "8745638cfb384041a0b26c0578a9a6d2"
-//         }
-//     });
-
-//     // Await all the fetched details together
-//     const recipesDetails = await Promise.all(response.data.results.map(recipe => 
-//         getRecipeDetails(recipe.id)));
-//     return recipesDetails;
-// }
 
 module.exports={
     getRecipeDetails,
     searchRecipe,
+    getRecipeInformation
     };
     
 
