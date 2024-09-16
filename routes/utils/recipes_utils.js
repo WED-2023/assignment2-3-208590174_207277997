@@ -1,6 +1,6 @@
 const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
-
+const api_key="d055534176f64dd8a1d47e32c3354c1e";
 
 /**
  * Get recipes list from spooncular response and extract the relevant recipe data for preview
@@ -15,7 +15,7 @@ async function getRecipeInformation(recipe_id) {
       const response = await axios.get(`${api_domain}/${cleanedRecipeId}/information`, {
         params: {
           includeNutrition: false,
-          apiKey:"dfae693cae89440ab9807ae88961373f"
+          apiKey: api_key
         }
       });
       return response.data;
@@ -31,18 +31,18 @@ async function getRecipeInformation(recipe_id) {
 
 async function getRecipeDetails(recipe_id) {
     let recipe_info = await getRecipeInformation(recipe_id);
-    let { id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree } = recipe_info.data;
+    let {id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,summary } = recipe_info;
 
     return {
         id: id,
+        image: image,
         title: title,
         readyInMinutes: readyInMinutes,
-        image: image,
-        popularity: aggregateLikes,
-        vegan: vegan,
+        aggregateLikes: aggregateLikes,
         vegetarian: vegetarian,
+        vegan: vegan,
         glutenFree: glutenFree,
-        
+        summary:summary
     }
 }
 
@@ -55,12 +55,12 @@ async function searchRecipe(recipeName, cuisine, diet, intolerance, number) {
             diet: diet,
             intolerances: intolerance,
             number: number,
-            apiKey: "dfae693cae89440ab9807ae88961373f"
+            apiKey: api_key
         }
     });
     
     // Use Promise.all to fetch details for each recipe ID
-    const recipeDetails = await Promise.all(response.data.results.map(element => getRecipeDetails(element.id)));
+    const recipeDetails = await Promise.all(response.data.results.map(element => getRecipeDetails(String(element.id))));
     return recipeDetails;
 
     //return getRecipeDetails(response.data.results.map((element) => element.recipe_id));
@@ -75,8 +75,8 @@ async function getRandomRecipes(number = 3) {
   try {
     const response = await axios.get(`${api_domain}/random`, {
       params: {
-        number: number,
-        apiKey: "dfae693cae89440ab9807ae88961373f"
+        apiKey: api_key,
+        number: "3"
       }
     });
     return response.data.recipes;

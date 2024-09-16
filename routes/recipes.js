@@ -22,9 +22,9 @@ router.get("/search", async (req, res, next) => {
 });
 
 /**
- * This path returns a full details of a recipe by its id
+ * This path returns preview details of a recipe by its id
  */
-router.get("/:recipeId", async (req, res, next) => {
+router.get("preview/:recipeId", async (req, res, next) => {
   try {
     const recipe = await recipes_utils.getRecipeDetails(req.params.recipeId);
     res.send(recipe);
@@ -41,6 +41,7 @@ router.get("/fullview/:recipeId", async (req, res, next) => {
   try {
     const recipeId = req.params.recipeId.trim(); 
     const recipe = await recipes_utils.getRecipeInformation(recipeId);
+    console.log(recipe)
     res.status(200).send(recipe);
   } catch (error) {
     next(error);
@@ -53,9 +54,24 @@ router.get("/fullview/:recipeId", async (req, res, next) => {
  */
 router.get("/random", async (req, res, next) => {
   try {
+    var recipeDetails;
     const recipes = await recipes_utils.getRandomRecipes(3);
-    res.status(200).send(recipes);
-  } catch (error) {
+    const recipeIds = recipes.map(recipe => (String(recipe.id)));
+    var recipesDetailsArray = [];
+    // Loop through each recipe ID
+    for (let recipeId of recipeIds) 
+      {
+      try {
+        recipeDetails = await recipes_utils.getRecipeDetails(recipeId);
+        recipesDetailsArray.push(recipeDetails); // Add recipe details to the array
+       } 
+      catch (error) {
+        console.error(`Error fetching details for recipe ID ${recipeId}:`, error);
+      }
+      }
+    res.status(200).send(recipesDetailsArray);
+  }
+   catch (error) {
     next(error);
   }
 });

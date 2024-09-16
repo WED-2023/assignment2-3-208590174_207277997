@@ -10,6 +10,7 @@ const recipe_utils = require("./utils/recipes_utils");
  * Authenticate all incoming requests by middleware
  */
 router.use(async function (req, res, next) {
+  console.log(req.session.username)
   if (req.session && req.session.username) {
     DButils.execQuery("SELECT username FROM users").then((users) => {
       if (users.find((x) => x.username === req.session.username)) {
@@ -43,10 +44,12 @@ router.post('/favorites', async (req,res,next) => {
 router.get('/favorites', async (req,res,next) => {
   try{
     const username = req.session.username;
-    let favorite_recipes = {};
+    //let favorite_recipes = {};
     const recipes_id = await user_utils.getFavoriteRecipes(username);
+    
     let recipes_id_array = [];
-    recipes_id.map((element) => recipes_id_array.push(element.recipe_id)); //extracting the recipe ids into array
+    recipes_id.map((element) => recipes_id_array.push(String(element.recipe_id))); //extracting the recipe ids into array
+    console.log(recipes_id_array)
     //const results = await recipe_utils.getRecipeDetails(recipes_id_array);
     const results = await Promise.all(
       recipes_id_array.map((id) => recipe_utils.getRecipeDetails(id))
@@ -62,17 +65,12 @@ router.get('/favorites', async (req,res,next) => {
 /**
  * This path allows a logged-in user to create a new recipe
  */
-<<<<<<< HEAD
-router.post('/createrecipe', async (req, res, next) => {
-  try {
-    const username = req.session.username;
-    const { title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree, ingredients, summary, instruction } = req.body;
-=======
+
 router.post('/createRecipes', async (req, res, next) => {
   try {
     const username = req.session.username;
     const { title, readyInMinutes, image,summary,instructions, popularity, vegan, vegetarian, glutenFree, ingredients } = req.body;
->>>>>>> fa6a4a358a77f0840015ce61e5117f4a4128eb29
+
 
     // Validate input
     if (!title || !readyInMinutes || summary.length === 0 || instructions.length === 0 || !ingredients) {
@@ -80,12 +78,8 @@ router.post('/createRecipes', async (req, res, next) => {
     }
 
     // Create the recipe
-<<<<<<< HEAD
-    const recipe_id = await user_utils.createRecipe(username, title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree, ingredients, summary, instruction);
-=======
-    const recipe_id = await user_utils.createRecipe(username, title, readyInMinutes, image, summary,instructions,popularity, vegan, vegetarian, glutenFree, ingredients,);
->>>>>>> fa6a4a358a77f0840015ce61e5117f4a4128eb29
 
+    const recipe_id = await user_utils.createRecipe(username, title, readyInMinutes, image, summary,instructions,popularity, vegan, vegetarian, glutenFree, ingredients);
     res.status(201).send({ message: "Recipe created successfully", recipe_id: recipe_id });
   } catch (error) {
     next(error);

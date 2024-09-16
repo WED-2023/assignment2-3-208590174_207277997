@@ -1,7 +1,7 @@
 const DButils = require("./DButils");
 
 async function markAsFavorite(username, recipe_id){
-    await DButils.execQuery(`insert into FavoriteRecipes values ('${username}',${recipe_id})`);
+    await DButils.execQuery(`insert into FavoriteRecipes values ('${username}','${recipe_id}')`);
 }
 
 async function getFavoriteRecipes(username){
@@ -10,19 +10,12 @@ async function getFavoriteRecipes(username){
 }
 
 // Function to create a new recipe
-<<<<<<< HEAD
-async function createRecipe(username, title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree, ingredients, summary, instruction) {
-  // Insert the recipe into User_Recipes table
-  const result = await DButils.execQuery(`
-    INSERT INTO User_Recipes (username, title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree, summary, instruction)
-    VALUES ('${username}', '${title}', ${readyInMinutes}, '${image}', ${popularity}, ${vegan}, ${vegetarian}, ${glutenFree},'${summary}', '${instruction}' )
-=======
+
 async function createRecipe(username, title, readyInMinutes, image,summary,instructions, popularity, vegan, vegetarian, glutenFree, ingredients) {
   // Insert the recipe into User_Recipes table
   const result = await DButils.execQuery(`
     INSERT INTO User_Recipes (username, title, readyInMinutes, image, popularity, vegan, vegetarian, glutenFree,summary,instructions)
     VALUES ('${username}', '${title}', ${readyInMinutes}, '${image}', ${popularity}, ${vegan}, ${vegetarian}, ${glutenFree},'${summary}','${instructions}')
->>>>>>> fa6a4a358a77f0840015ce61e5117f4a4128eb29
   `);
   const recipe_id = result.insertId;
 
@@ -76,14 +69,8 @@ async function getUserRecipeInformation(username,recipe_id) {
       return { error: 'Failed to retrieve recipe information.' };
   }
 }
-  
-<<<<<<< HEAD
-  
-=======
->>>>>>> fa6a4a358a77f0840015ce61e5117f4a4128eb29
 exports.markAsFavorite = markAsFavorite;
 exports.getFavoriteRecipes = getFavoriteRecipes;
 exports.createRecipe = createRecipe;
 exports.getUserRecipes = getUserRecipes;
 exports.getUserRecipeInformation = getUserRecipeInformation;
-
