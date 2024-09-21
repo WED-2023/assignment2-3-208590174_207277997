@@ -1,6 +1,9 @@
 var express = require("express");
 var router = express.Router();
 const recipes_utils = require("./utils/recipes_utils");
+const user_utils = require("./utils/user_utils");
+
+
 
 router.get("/", (req, res) => res.send("im here"));
 
@@ -39,14 +42,28 @@ router.get("preview/:recipeId", async (req, res, next) => {
  */
 router.get("/fullview/:recipeId", async (req, res, next) => {
   try {
-    const recipeId = req.params.recipeId.trim(); 
-    const recipe = await recipes_utils.getRecipeInformation(recipeId);
-    console.log(recipe)
-    res.status(200).send(recipe);
+    const recipeId = req.params.recipeId.trim();
+    const username = req.session.username;
+    if (recipeId.startsWith("RU")) {
+      const recipe = await user_utils.getUserRecipeInformation(username, recipeId);
+      if (!recipe || recipe.error) {
+        throw { status: 404, message: "No results were found" };
+      }
+      const logView = await user_utils.updateRecipeView(username,recipeId,1,0);
+      console.log("Recipe from DB:", recipe);
+      res.status(200).send(recipe);
+    } 
+    else {
+      const recipe = await recipes_utils.getRecipeInformation(recipeId);
+      const logView = await user_utils.updateRecipeView(username,recipeId,0,1);
+      console.log("Recipe from Spoonacular:", recipe);
+      res.status(200).send(recipe);
+    }
   } catch (error) {
     next(error);
   }
 });
+
 
 
 /**
@@ -75,6 +92,7 @@ router.get("/random", async (req, res, next) => {
     next(error);
   }
 });
+
 
 
 module.exports = router;

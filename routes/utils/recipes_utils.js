@@ -1,6 +1,6 @@
 const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
-const api_key="d055534176f64dd8a1d47e32c3354c1e";
+const api_key="dfae693cae89440ab9807ae88961373f";
 
 /**
  * Get recipes list from spooncular response and extract the relevant recipe data for preview
@@ -34,6 +34,7 @@ async function getRecipeDetails(recipe_id) {
     let {id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,summary } = recipe_info;
 
     return {
+        recipe_id:id,
         id: id,
         image: image,
         title: title,
