@@ -1,6 +1,10 @@
 const axios = require("axios");
 const api_domain = "https://api.spoonacular.com/recipes";
-const api_key="dfae693cae89440ab9807ae88961373f";
+// const api_key="dfae693cae89440ab9807ae88961373f";
+// const api_key="fb64b0e0a64b400bae5e072b765cd00a";
+const api_key="88ef2cad6cd642ab99759ca8a96cf1a7";
+
+
 
 /**
  * Get recipes list from spooncular response and extract the relevant recipe data for preview
@@ -34,16 +38,16 @@ async function getRecipeDetails(recipe_id) {
     let {id, title, readyInMinutes, image, aggregateLikes, vegan, vegetarian, glutenFree,summary } = recipe_info;
 
     return {
-        recipe_id:id,
-        id: id,
-        image: image,
-        title: title,
-        readyInMinutes: readyInMinutes,
-        aggregateLikes: aggregateLikes,
-        vegetarian: vegetarian,
-        vegan: vegan,
-        glutenFree: glutenFree,
-        summary:summary
+      recipe_id:id,
+      id: id,
+      image: image,
+      title: title,
+      readyInMinutes: readyInMinutes,
+      aggregateLikes: aggregateLikes,
+      vegetarian: vegetarian,
+      vegan: vegan,
+      glutenFree: glutenFree,
+      summary:summary
     }
 }
 
