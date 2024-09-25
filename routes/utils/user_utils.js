@@ -1,9 +1,7 @@
-const { signedCookie } = require("cookie-parser");
 const DButils = require("./DButils");
 
 async function markAsFavorite(username, recipe_id){
     await DButils.execQuery(`insert into FavoriteRecipes values ('${username}','${recipe_id}')`);
-    
 }
 
 async function getFavoriteRecipes(username){
@@ -90,17 +88,35 @@ async function getUserRecipeInformation(username, recipe_id) {
 
 async function updateRecipeView(username,recipeId,user_recipe,spooncular_recipe)
 {
-  if (user_recipe==1)
-    recipeId=String(recipeId)
-  await DButils.execQuery(`INSERT INTO last_recipes_watched (username, recipe_id, user_recipe, spooncular_recipe) 
-                         VALUES ('${username}', '${recipeId}', ${user_recipe}, ${spooncular_recipe})`);
+  if (user_recipe == 1) {
+    recipeId = String(recipeId);
+  }
+
+  const existingRecord = await DButils.execQuery(`
+    SELECT * FROM last_recipes_watched 
+    WHERE username = '${username}' AND recipe_id = '${recipeId}'
+  `);
+
+  if (existingRecord.length === 0) {
+    await DButils.execQuery(`
+      INSERT INTO last_recipes_watched (username, recipe_id, user_recipe, spooncular_recipe) 
+      VALUES ('${username}', '${recipeId}', ${user_recipe}, ${spooncular_recipe})
+    `);
+  }
+
+  await limitLastViewedRecipes(username);
 }
 
 async function getLastViewedRecipes(username) {
   try 
   {
     let recentRecords = await DButils.execQuery(`SELECT * FROM last_recipes_watched WHERE username = '${username}' ORDER BY created_at DESC LIMIT 3`);
-    console.log(recentRecords)
+    // console.log('recenttt:', recentRecords)
+    
+    if (!Array.isArray(recentRecords)) {
+      recentRecords = [];
+    }
+    
     if (recentRecords.length === 0) 
       {
         // Handle the case where no last recipes are found for the user
@@ -114,6 +130,19 @@ async function getLastViewedRecipes(username) {
   }
 }
 
+async function limitLastViewedRecipes(username) {
+  const viewedRecipes = await DButils.execQuery(`
+    SELECT * FROM last_recipes_watched WHERE username = '${username}' ORDER BY created_at DESC
+  `);
+  
+  if (viewedRecipes.length > 3) {
+    const recipesToDelete = viewedRecipes.slice(3);
+    await DButils.execQuery(`
+      DELETE FROM last_recipes_watched WHERE username = '${username}' AND recipe_id IN (${recipesToDelete.map(r => `'${r.recipe_id}'`).join(', ')})
+    `);
+  }
+}
+
 
 
 exports.markAsFavorite = markAsFavorite;
@@ -122,4 +151,5 @@ exports.createRecipe = createRecipe;
 exports.getUserRecipes = getUserRecipes;
 exports.getUserRecipeInformation = getUserRecipeInformation;
 exports.updateRecipeView = updateRecipeView;
-exports.getLastViewedRecipes=getLastViewedRecipes;
+exports.getLastViewedRecipes = getLastViewedRecipes;
+exports.limitLastViewedRecipes = limitLastViewedRecipes;
